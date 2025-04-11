@@ -2,6 +2,7 @@ from paddleocr import PaddleOCR
 from PIL import Image
 import os
 
+#sonal was here
 
 # 'en', 'ta', 'te', 'ka', 'devanagari'
 lang_code = 'en'  
