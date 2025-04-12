@@ -162,7 +162,7 @@ if st.button("Process"):
 
                 # Parse the cleaned JSON string
                 response = json.loads(clean_json_str)
-                print(response)
+                st.write(response)
                # 
                 # Assuming `df` is the DataFrame you want to append
                 df = pd.json_normalize(response)
