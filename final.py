@@ -7,7 +7,7 @@ import time
 from mistralai import Mistral
 from openpyxl import load_workbook
 import pandas as pd 
-st.set_page_config(page_title="📊 Excel RAG Chatbot", layout="wide")
+st.set_page_config(page_title="📊 BillBot", layout="wide")
 st.title("BillBot")
 def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
