@@ -2,8 +2,6 @@
 from paddleocr import PaddleOCR
 import os
 
-#sonal was here
-
 # 'en', 'ta', 'te', 'ka', 'devanagari'
 lang_code = 'en'  
 image_path = 'C:\\Users\\Sonal\\OneDrive\\Desktop\\VS PROJS\\hackinghard\\BillBot\\bmtc1.jpg'  
@@ -32,16 +30,19 @@ with open(output_file, 'w', encoding='utf-8') as f:
 
 import streamlit as st
 import os
+from dotenv import load_dotenv
 import base64
 import json
 import time
 from mistralai import Mistral
 import pandas as pd 
 
-st.title("Mistral OCR App")
+st.title("BillBot")
 
 # 1. API Key Input
-api_key = "AUHGTFQUOgInIPfa1PIgH0F6UaKsGGz3"
+
+load_dotenv()
+api_key = os.getenv("MISTRAL_TOKEN")
 if(api_key is None ):
     print( "API key not found.")
 
@@ -130,7 +131,7 @@ if st.button("Process"):
                             You are a bills and invoice parser. Understand raw and unstructured text and extract structured fields from the following bill text. map the fields to the following JSON format.
                             if there are fields you can identify but not in the JSON format, add them to the JSON as well. add only relevant fields to the JSON.
                             If you cannot identify any fields, remove that JSON field from the answer. do not generate own content.
-                            Return the output as JSON with fields like:
+                            Return the output as JSON with fields like this and all the fields should be seperately mapped (no nested json). Stick to the order of the fields mentioned below.:
                             - vendor_name
                             - invoice_number
                             - date
@@ -164,17 +165,30 @@ if st.button("Process"):
                 )
 
                 response = chat_response.choices[0].message.content
+                import json
+                with open('data.json', 'w') as f:
+                    json.dump(response, f)
+                print(response)
+                
                 lines = response.strip().splitlines()
                 # Remove the first and last training lines
                 clean_json_str = "\n".join(lines[1:-1])
 
                 # Parse the cleaned JSON string
                 response = json.loads(clean_json_str)
+                print(response)
+                '''
                 df = pd.json_normalize(response)
         
-                df.to_excel("bill_template.xlsx", index=False)
-                # print(response)  print this response (it is in json) if facing errors during converson to excel
+                # df.to_excel("bill_template.xlsx", index=False)
 
+                with pd.ExcelWriter('bill_template.xlsx', engine='openpyxl', mode='a') as writer:
+                try:
+                    new_df.to_excel(writer, sheet_name='Sheet 1', index=False, header=None)
+                except PermissionError:
+                    print("Close the file in Excel and try again.")
 
+                # print this response (it is in json) if facing errors during converson to excel
+                '''
 
 
